@@ -1,0 +1,50 @@
+# This is an example of how I use the sanitizer proxy with Traefik. 
+# Traefik proxies all requests to the sanitizer-proxy container, which 
+# proxies requests to Navidrome.
+
+networks:
+  web_proxy:
+    external: true
+    name: web_proxy
+
+services:
+  navidrome:
+    container_name: navidrome
+    image: mirror.gcr.io/deluan/navidrome:latest
+    restart: unless-stopped
+    networks:
+      - web_proxy
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /src/media/music:/music:ro
+    environment:
+      - SUBDOMAIN
+      - ND_REVERSEPROXYWHITELIST
+      - ND_SCANSCHEDULE
+      - ND_LOGLEVEL
+      - ND_SESSIONTIMEOUT
+      - ND_ENABLETRANSCODINGCONFIG
+      - ND_AUTOIMPORTPLAYLISTS
+      - ND_PLAYLISTSPATH
+      - ND_PASSWORDENCRYPTIONKEY
+      - ND_LASTFM_APIKEY
+      - ND_LASTFM_SECRET
+      - ND_SPOTIFY_ID
+      - ND_SPOTIFY_SECRET
+  sanitizer-proxy:
+    container_name: sanitizer-proxy
+    image: ghcr.io/joekrill/subsonic-sanitizer
+    restart: unless-stopped
+    networks:
+      - web_proxy
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      - TARGET_URL=http://navidrome:4533
+#      - LOG_LEVEL=debug
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.navidrome.rule=Host(`$SUBDOMAIN.example.com`)"
+      - "traefik.http.routers.navidrome.entrypoints=web-secure"
+      - "traefik.http.services.navidrome.loadbalancer.server.port=3000"
