@@ -1,4 +1,5 @@
 [tools]
+"aqua:goreleaser/goreleaser" = "latest"
 go = "1.26.1"
 staticcheck = "2026.1"
 
@@ -8,18 +9,15 @@ run = "go run ./cmd/server.go"
 
 [tasks.clean]
 description = "Remove previous build artifaces"
-run = "rm -rf ./bin"
+run = "rm -rf ./dist"
 
 [tasks.build]
 description = "Build the server binary"
-sources = ["go.sum", "go.mod", "**/*.go", "vendor/**/*"]
-outputs = ["bin/subsonic-sanitizer"]
-run = "go build -ldflags='-s' -o=./bin/subsonic-sanitizer ./cmd/server.go"
+run = "goreleaser build"
 
-[tasks."build:linux:amd64"]
-description = "Build the application binary application for linux/amd64"
-env = { GOOS = 'linux', GOARCH = "amd64" }
-run = { task = "build" }
+[tasks.release]
+description = "Deploy a release"
+run = "goreleaser release"
 
 [tasks.test]
 description = "Runs tests"
