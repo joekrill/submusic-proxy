@@ -34,7 +34,7 @@ services:
       - ND_SPOTIFY_SECRET
   sanitizer-proxy:
     container_name: sanitizer-proxy
-    image: ghcr.io/joekrill/subsonic-sanitizer
+    image: joekrill/subsonic-sanitizer
     restart: unless-stopped
     networks:
       - web_proxy

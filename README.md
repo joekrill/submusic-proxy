@@ -12,6 +12,14 @@ The SubSonic API returns a lot more information than SubMusic consumes. This is 
 
 ## Installation/usage
 
+
+
+### Docker
+
+`joekrill/subsonic-sanitizer`
+
+Set `TARGET_URL` environment variable to your SubSonic instance (i.e. "http://mynavidrom:5433")
+
 ### Docker Compose
 
 See [compose-example.yml](./compose-example.yml) for an example of proxying requests to Navidrome
