@@ -64,7 +64,7 @@ release:
 dockers_v2:
   - images:
       - "ghcr.io/joekrill/subsonic-sanitizer"
-      # - "joekrill/subsonic-sanitizer"
+      - "joekrill/subsonic-sanitizer"
     tags:
       - "v{{ .Version }}"
       - "{{ if .IsNightly }}nightly{{ end }}"
